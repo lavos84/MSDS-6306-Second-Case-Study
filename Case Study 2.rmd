@@ -1,0 +1,179 @@
+---
+title: "Case Study 2: Employee Attrition"
+author: "Drew Wilkins, Faiz Ikramulla, Samuel Kadyebo"
+date: "November 24, 2018"
+output:
+  html_document:
+    keep_md: true
+---
+```{r Q1a, echo=FALSE, message = FALSE, warnings = FALSE}
+# Load in the data for "DAX"
+#install.packages("openxlsx")
+library(openxlsx)
+library(plotly)
+setwd("C:/Users/Andrew/Documents/Data Science Masters/Doing Data Science/Case Study 2/Case Study 2 Project/")
+casestudy <- read.xlsx("Data/CaseStudy2-data.xlsx", sheet= 1, colNames= T)
+# Columns 9, 10, 22, and 27 have no meaningful data.  Remove them.
+casestudy <- casestudy[,-c(9, 10, 22, 27)]
+n <- ncol(casestudy)
+numerical <- c(1,4,6,7,9,11,12,13,15,17,18,19,21,22,23,24,25,26,27,28,29,30,31)
+nonnumerical <- c(1:31)[-numerical]
+
+# Create an interactive plot
+attach(casestudy)
+pal <- c("blue", "red")
+p <- plot_ly(casestudy, x=Age, y=Age,
+             mode= "markers", type= "scatter", 
+             color= ~Attrition, colors= pal) %>%
+config(displayModeBar = F) %>% # this removes the interactive toolbar
+layout(
+# This is where we add buttons with functionality to the plot
+updatemenus = list(
+  list(
+    # This is the location of the vertical axis button
+    x= 0.46, y = 1.1,
+    yanchor= "top",
+    # Define the button, and each list represents the options
+    buttons = list(
+      list(args = list(list(y= list(Age))),
+           label = "Age", method = "restyle"),
+      list(args = list(list(y= list(Attrition))),
+           label = "Attrition", method = "restyle"),
+      list(args = list(list(y= list(BusinessTravel))),
+           label = "Business Travel", method = "restyle"),
+      list(args = list(list(y= list(DailyRate))),
+           label = "Daily Rate", method = "restyle"),
+      list(args = list(list(y= list(Department))),
+           label = "Department", method = "restyle"),
+      list(args = list(list(y= list(DistanceFromHome))),
+           label = "Distance From Home", method = "restyle"),
+      list(args = list(list(y= list(Education))),
+           label = "Education", method = "restyle"),
+      list(args = list(list(y= list(EducationField))),
+           label = "Education Field", method = "restyle"),
+      list(args = list(list(y= list(EnvironmentSatisfaction))),
+           label = "Environment Satisfaction", method = "restyle"),
+      list(args = list(list(y= list(Gender))),
+           label = "Gender", method = "restyle"),
+      list(args = list(list(y= list(HourlyRate))),
+           label = "Hourly Rate", method = "restyle"),
+      list(args = list(list(y= list(JobInvolvement))),
+           label = "Job Involvement", method = "restyle"),
+      list(args = list(list(y= list(JobLevel))),
+           label = "Job Level", method = "restyle"),
+      list(args = list(list(y= list(JobRole))),
+           label = "Job Role", method = "restyle"),
+      list(args = list(list(y= list(JobSatisfaction))),
+           label = "Job Satisfaction", method = "restyle"),
+      list(args = list(list(y= list(MaritalStatus))),
+           label = "Marital Status", method = "restyle"),
+      list(args = list(list(y= list(MonthlyIncome))),
+           label = "Monthly Income", method = "restyle"),
+      list(args = list(list(y= list(MonthlyRate))),
+           label = "Monthly Rate", method = "restyle"),
+      list(args = list(list(y= list(NumCompaniesWorked))),
+           label = "# Companies Worked For", method = "restyle"),
+      list(args = list(list(y= list(OverTime))),
+           label = "Overtime", method = "restyle"),
+      list(args = list(list(y= list(PercentSalaryHike))),
+           label = "Percent Salary Hike", method = "restyle"),
+      list(args = list(list(y= list(PerformanceRating))),
+           label = "Performance Rating", method = "restyle"),
+      list(args = list(list(y= list(RelationshipSatisfaction))),
+           label = "Relationship Satisfaction", method = "restyle"),
+      list(args = list(list(y= list(StockOptionLevel))),
+           label = "Stock Option Level", method = "restyle"),
+      list(args = list(list(y= list(TotalWorkingYears))),
+           label = "Total Working Years", method = "restyle"),
+      list(args = list(list(y= list(TrainingTimesLastYear))),
+           label = "Training Times Last Year", method = "restyle"),
+      list(args = list(list(y= list(WorkLifeBalance))),
+           label = "Work Life Balance", method = "restyle"),
+      list(args = list(list(y= list(YearsAtCompany))),
+           label = "Years At Company", method = "restyle"),
+      list(args = list(list(y= list(YearsInCurrentRole))),
+           label = "Years In Current Role", method = "restyle"),
+      list(args = list(list(y= list(YearsSinceLastPromotion))),
+           label = "Years Since Last Promotion", method = "restyle"),
+      list(args = list(list(y= list(YearsWithCurrManager))),
+           label = "Years With Current Manager", method = "restyle"))
+    ),
+  list(
+    # This is the location of the horizontal axis button
+    x= 1.1, y = 1.1,
+    yanchor= "top",
+    # Define the button, and each list represents the options
+    # CAUTION!  Colors get messed up when the x-axis is changed!
+    buttons = list(
+      list(args = list(list(x= list(Age))),
+           label = "Age", method = "restyle"),
+      list(args = list(list(x= list(Attrition))),
+           label = "Attrition", method = "restyle"),
+      list(args = list(list(x= list(BusinessTravel))),
+           label = "Business Travel", method = "restyle"),
+      list(args = list(list(x= list(DailyRate))),
+           label = "Daily Rate", method = "restyle"),
+      list(args = list(list(x= list(Department))),
+           label = "Department", method = "restyle"),
+      list(args = list(list(x= list(DistanceFromHome))),
+           label = "Distance From Home", method = "restyle"),
+      list(args = list(list(x= list(Education))),
+           label = "Education", method = "restyle"),
+      list(args = list(list(x= list(EducationField))),
+           label = "Education Field", method = "restyle"),
+      list(args = list(list(x= list(EnvironmentSatisfaction))),
+           label = "Environment Satisfaction", method = "restyle"),
+      list(args = list(list(x= list(Gender))),
+           label = "Gender", method = "restyle"),
+      list(args = list(list(x= list(HourlyRate))),
+           label = "Hourly Rate", method = "restyle"),
+      list(args = list(list(x= list(JobInvolvement))),
+           label = "Job Involvement", method = "restyle"),
+      list(args = list(list(x= list(JobLevel))),
+           label = "Job Level", method = "restyle"),
+      list(args = list(list(x= list(JobRole))),
+           label = "Job Role", method = "restyle"),
+      list(args = list(list(x= list(JobSatisfaction))),
+           label = "Job Satisfaction", method = "restyle"),
+      list(args = list(list(x= list(MaritalStatus))),
+           label = "Marital Status", method = "restyle"),
+      list(args = list(list(x= list(MonthlyIncome))),
+           label = "Monthly Income", method = "restyle"),
+      list(args = list(list(x= list(MonthlyRate))),
+           label = "Monthly Rate", method = "restyle"),
+      list(args = list(list(x= list(NumCompaniesWorked))),
+           label = "# Companies Worked For", method = "restyle"),
+      list(args = list(list(x= list(OverTime))),
+           label = "Overtime", method = "restyle"),
+      list(args = list(list(x= list(PercentSalaryHike))),
+           label = "Percent Salary Hike", method = "restyle"),
+      list(args = list(list(x= list(PerformanceRating))),
+           label = "Performance Rating", method = "restyle"),
+      list(args = list(list(x= list(RelationshipSatisfaction))),
+           label = "Relationship Satisfaction", method = "restyle"),
+      list(args = list(list(x= list(StockOptionLevel))),
+           label = "Stock Option Level", method = "restyle"),
+      list(args = list(list(x= list(TotalWorkingYears))),
+           label = "Total Working Years", method = "restyle"),
+      list(args = list(list(x= list(TrainingTimesLastYear))),
+           label = "Training Times Last Year", method = "restyle"),
+      list(args = list(list(x= list(WorkLifeBalance))),
+           label = "Work Life Balance", method = "restyle"),
+      list(args = list(list(x= list(YearsAtCompany))),
+           label = "Years At Company", method = "restyle"),
+      list(args = list(list(x= list(YearsInCurrentRole))),
+           label = "Years In Current Role", method = "restyle"),
+      list(args = list(list(x= list(YearsSinceLastPromotion))),
+           label = "Years Since Last Promotion", method = "restyle"),
+      list(args = list(list(x= list(YearsWithCurrManager))),
+           label = "Years With Current Manager", method = "restyle")))
+    )
+  )
+detach(casestudy)
+annot <- list(list(text = "Vertical<br>Axis", x=-0.1, y= 1.1, xref='paper', yref='paper', showarrow=FALSE),
+              list(text = "Horizontal<br>Axis", x= 0.57, y= 1.1, xref='paper', yref='paper', showarrow=FALSE))
+
+p <- p %>%layout(
+  annotations = annot)
+p
+```
