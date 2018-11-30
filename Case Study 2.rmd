@@ -7,26 +7,27 @@ output:
     keep_md: true
 ---
 ```{r Q1a, echo=FALSE, message = FALSE, warnings = FALSE}
-# Load in the data for "DAX"
 #install.packages("openxlsx")
 library(openxlsx)
 library(plotly)
+
 setwd("C:/Users/Andrew/Documents/Data Science Masters/Doing Data Science/Case Study 2/Case Study 2 Project/")
 casestudy <- read.xlsx("Data/CaseStudy2-data.xlsx", sheet= 1, colNames= T)
 # Columns 9, 10, 22, and 27 have no meaningful data.  Remove them.
 casestudy <- casestudy[,-c(9, 10, 22, 27)]
-n <- ncol(casestudy)
-numerical <- c(1,4,6,7,9,11,12,13,15,17,18,19,21,22,23,24,25,26,27,28,29,30,31)
-nonnumerical <- c(1:31)[-numerical]
 
 # Create an interactive plot
 attach(casestudy)
 pal <- c("blue", "red")
-p <- plot_ly(casestudy, x=Age, y=Age,
+pal <- setNames(pal, c("No", "Yes"))
+annot <- list(list(text = "Vertical<br>Axis", x=-0.1, y= 1.1, xref='paper', yref='paper', showarrow=FALSE),
+              list(text = "Horizontal<br>Axis", x= 0.57, y= 1.1, xref='paper', yref='paper', showarrow=FALSE))
+p <- plot_ly(casestudy, x=JobRole, y=MonthlyIncome,
              mode= "markers", type= "scatter", 
              color= ~Attrition, colors= pal) %>%
 config(displayModeBar = F) %>% # this removes the interactive toolbar
 layout(
+  annotations = annot,
 # This is where we add buttons with functionality to the plot
 updatemenus = list(
   list(
@@ -35,7 +36,7 @@ updatemenus = list(
     yanchor= "top",
     # Define the button, and each list represents the options
     buttons = list(
-      list(args = list(list(y= list(Age))),
+      list(args = list(list(y= list(Age), yaxis= list(title= "Age"))),
            label = "Age", method = "restyle"),
       list(args = list(list(y= list(Attrition))),
            label = "Attrition", method = "restyle"),
@@ -103,7 +104,6 @@ updatemenus = list(
     x= 1.1, y = 1.1,
     yanchor= "top",
     # Define the button, and each list represents the options
-    # CAUTION!  Colors get messed up when the x-axis is changed!
     buttons = list(
       list(args = list(list(x= list(Age))),
            label = "Age", method = "restyle"),
@@ -170,10 +170,6 @@ updatemenus = list(
     )
   )
 detach(casestudy)
-annot <- list(list(text = "Vertical<br>Axis", x=-0.1, y= 1.1, xref='paper', yref='paper', showarrow=FALSE),
-              list(text = "Horizontal<br>Axis", x= 0.57, y= 1.1, xref='paper', yref='paper', showarrow=FALSE))
 
-p <- p %>%layout(
-  annotations = annot)
 p
 ```
