@@ -14,10 +14,6 @@ parameters <- colnames(casestudy) # This will be used for the plot
 fluidPage(
   h2("Exploratory Data Analysis"),
   h4("Change the vertical and horizontal axes to compare different parameters"),
-  tags$ol(
-    tags$li("The first dropdown is the vertical axis"),
-    tags$li("The second dropdown is for the horizontal axis")
-  ),
   
   # Vertical space
   tags$hr(),
